@@ -1,75 +1,158 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-    <title>Your Simple Site</title>
-    <script src="https://one.relayx.io/relayone.js"></script>
-</head>
-<body>
-    <div id="relayx-button"></div>
-    <script>
-      const div = document.querySelector('#relayx-button');
-      relayone.render(div, {
-        to: "1jadwahab",
-        amount: "1",
-        currency: "USD"
-      });
-    </script>
-</body>
-</html> -->
-
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-  <title>LooLock Authentication</title>
-  <script src="https://one.relayx.io/relayone.js"></script>
-  <!-- <script type="text/javascript" src="https://unpkg.com/bsv@0.30.0/bsv.min.js"></script> -->
-  <!-- <script src="https://unpkg.com/bsv@2.0.7"></script> -->
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/elliptic/6.5.4/elliptic.min.js"></script> -->
-  <script src="./scripts/bsv.browser.min.js"></script>
-  <script src="./scripts/msg.js"></script>
-  
-</head>
-<script>
-  // This will change once we have our domain and value whitelisted
-  const signingPrefix = '1RELAYTEST';
-  async function init() {
-    try {
-      const token = await relayone.authBeta(true);
-      const [payload, signature] = token.split(".");
-      const user = JSON.parse(atob(payload)); // Buffer.from(payload, 'base64')
-      console.log('Relay Payment Info:', user);
-
-      const msg = `${signingPrefix}|test`;
-      console.log("MSG:", msg);
-      const sig = await relayone.sign(msg);
-
-      console.log("SIGSIGSIGSIG");
-      console.log(sig);
-      console.log(sig.value);
-      console.log(user.key);
-      console.log(msg);
-
-      const verified = bsvMessage.verify(msg, user.key, sig.value, msg)
-
-      // const EC = elliptic.ec;
-      // const ec = new EC('secp256k1');
-
-      // const keyPair = ec.keyFromPublic(user.pubkey, 'hex');
-      // const isValid = keyPair.verify(msg, sig.value);
-
-      // console.log("Signature valid: ", isValid);
-
-
-    } catch (error) {
-      console.log("ERROR LOGGIN IN");
-      console.log(error);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relay Message Signer</title>
+  <style>
+    h1 {
+      font-size: 2em;
+      color: #333;
+      margin-bottom: 20px;
     }
-  }
-  const main = async () => {
-    init()
-  }
 
-  main();
-</script>
+    body {
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #e0e0e0;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 600px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      margin: 10px 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .input-container {
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: block;
+      margin: 10px auto 0;
+      /* centers the button */
+      width: 100%;
+      /* makes the button full-width */
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      resize: vertical;
+      /* Allows the user to resize it vertically */
+      height: 60px;
+      /* This sets the initial vertical size */
+    }
+
+    .relay-instructions {
+      margin-top: 10px;
+      color: #888;
+      text-align: center;
+    }
+
+    #relayx-button {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+  <script src="https://one.relayx.io/relayone.js"></script>
+</head>
+
+<body onload="init()">
+  <h1>Relay Message Signer</h1>
+
+  <div class="container">
+    <div class="input-container">
+      <label for="userInput">Your message goes here:</label>
+      <input type="text" id="userInput" placeholder="Message">
+    </div>
+
+    <button onclick="signMessage()">SIGN</button>
+    <!-- <div class="relay-instructions">Swipe the relay button to sign</div>
+    <div id="relayx-button"></div> -->
+  </div>
+
+  <div class="container">
+    <label for="result">Your signature comes out here:</label>
+    <textarea id="result" placeholder="Signature" readonly></textarea>
+  </div>
+
+  <script>
+    const signingPrefix = '1RELAYTEST';
+
+    async function signMessage() {
+      const userMessage = document.getElementById('userInput').value;
+      const msg = `${signingPrefix}|${userMessage}`;
+      const sig = await relayone.sign(msg);
+      document.getElementById('result').value = sig.value;
+    }
+
+    // Listen for the Enter key press on the user input
+    document.getElementById('userInput').addEventListener("keyup", function (event) {
+      // Number 13 is the "Enter" key
+      if (event.keyCode === 13) {
+        event.preventDefault();
+        signMessage();
+      }
+    });
+
+    // // After rendering the button, listen for the payment event
+    // relayone.on('payment', function (payment) {
+    //   console.log('Payment successful!', payment);
+    //   signMessage();
+    // });
+    // const div = document.querySelector('#relayx-button')
+    // relayone.render(div, {
+    //   to: "1jadwahab",
+    //   amount: 1,
+    //   currency: "USD"
+    // })
+
+    async function init() {
+      const token = await relayone.authBeta();
+      const [payload, signature] = token.split('.');
+      user = JSON.parse(atob(payload));
+      console.log('Relay Payment Info:', user);
+    }
+  </script>
+</body>
 
 </html>
