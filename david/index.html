@@ -1,0 +1,48 @@
+<html>
+
+<head>
+    <script src="https://one.relayx.io/relayone.js"></script>
+    <script src="https://unpkg.com/bsv@2.0.7"></script>
+
+    <script>
+        // This will change once we have our domain and value whitelisted
+        const signingPrefix = '1RELAYTEST';
+        let user;
+        const priv1 = bsvjs.PrivKey.fromWif('L4hYjwVqvYbtzQje5aqYA7aAKscu1Jx3ijH5S69akguNjTx8hSMh');
+        const kp1 = bsvjs.KeyPair.fromPrivKey(priv1);
+        const pub1 = bsvjs.PubKey.fromPrivKey(priv1);
+        const add1 = bsvjs.Address.fromPrivKey(priv1);
+
+        const priv2 = bsvjs.PrivKey.fromWif('KyZxVcvFdCfvAgVu6RzF7CoSaCC4jwmorXjr52jhhtPG1bCczWSq');
+        const kp2 = bsvjs.KeyPair.fromPrivKey(priv2);
+        const pub2 = bsvjs.PubKey.fromPrivKey(priv2);
+        const add2 = bsvjs.Address.fromPrivKey(priv2);
+
+        async function init() {
+            const token = await relayone.authBeta();
+            console.log("token");
+            console.log(token);
+            const [payload, signature] = token.split('.');
+            user = JSON.parse(atob(payload));
+            console.log('Relay Payment Info:', user);
+        }
+
+        async function buildAuth(path, body = '') {
+            const pubKey = bsvjs.PubKey.fromHex(user.pubkey);
+            const ts = Date.now();
+            const msg = `${signingPrefix}|${user.paymail}|${path}|${ts}|${body}`;
+            console.log("MSG:", msg);
+            const sig = await relayone.sign(msg);
+            const auth = `${user.paymail} ${ts} ${sig.value}`
+            console.log("AUTH:", auth)
+            return auth;
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div id="main"></div>
+
+</body>
+
+</html>

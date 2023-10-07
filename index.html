@@ -1,0 +1,75 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Your Simple Site</title>
+    <script src="https://one.relayx.io/relayone.js"></script>
+</head>
+<body>
+    <div id="relayx-button"></div>
+    <script>
+      const div = document.querySelector('#relayx-button');
+      relayone.render(div, {
+        to: "1jadwahab",
+        amount: "1",
+        currency: "USD"
+      });
+    </script>
+</body>
+</html> -->
+
+<html>
+
+<head>
+  <title>LooLock Authentication</title>
+  <script src="https://one.relayx.io/relayone.js"></script>
+  <!-- <script type="text/javascript" src="https://unpkg.com/bsv@0.30.0/bsv.min.js"></script> -->
+  <!-- <script src="https://unpkg.com/bsv@2.0.7"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/elliptic/6.5.4/elliptic.min.js"></script> -->
+  <script src="./scripts/bsv.browser.min.js"></script>
+  <script src="./scripts/msg.js"></script>
+  
+</head>
+<script>
+  // This will change once we have our domain and value whitelisted
+  const signingPrefix = '1RELAYTEST';
+  async function init() {
+    try {
+      const token = await relayone.authBeta(true);
+      const [payload, signature] = token.split(".");
+      const user = JSON.parse(atob(payload)); // Buffer.from(payload, 'base64')
+      console.log('Relay Payment Info:', user);
+
+      const msg = `${signingPrefix}|test`;
+      console.log("MSG:", msg);
+      const sig = await relayone.sign(msg);
+
+      console.log("SIGSIGSIGSIG");
+      console.log(sig);
+      console.log(sig.value);
+      console.log(user.key);
+      console.log(msg);
+
+      const verified = bsvMessage.verify(msg, user.key, sig.value, msg)
+
+      // const EC = elliptic.ec;
+      // const ec = new EC('secp256k1');
+
+      // const keyPair = ec.keyFromPublic(user.pubkey, 'hex');
+      // const isValid = keyPair.verify(msg, sig.value);
+
+      // console.log("Signature valid: ", isValid);
+
+
+    } catch (error) {
+      console.log("ERROR LOGGIN IN");
+      console.log(error);
+    }
+  }
+  const main = async () => {
+    init()
+  }
+
+  main();
+</script>
+
+</html>
