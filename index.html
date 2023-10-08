@@ -121,6 +121,7 @@
     async function signMessage() {
       const userMessage = document.getElementById('userInput').value;
       const msg = `${signingPrefix}|${userMessage}`;
+      console.log("Message to sign: " + msg);
       const sig = await relayone.sign(msg);
       document.getElementById('result').value = sig.value;
     }
