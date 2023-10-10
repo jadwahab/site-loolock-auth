@@ -96,7 +96,7 @@
   <script src="https://one.relayx.io/relayone.js"></script>
 </head>
 
-<body onload="init()">
+<body>
   <h1>Relay Message Signer</h1>
 
   <div class="container">
@@ -141,6 +141,13 @@
       alert('Text copied to clipboard!'); // Optional: Feedback to the user
     }
 
+    function getURLParameter(name) {
+      return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+    init();
+});
 
     // // After rendering the button, listen for the payment event
     // relayone.on('payment', function (payment) {
@@ -159,6 +166,11 @@
       const [payload, signature] = token.split('.');
       user = JSON.parse(atob(payload));
       console.log('Relay Payment Info:', user);
+
+      const userInputValue = getURLParameter('userInput');
+      if (userInputValue) {
+        document.getElementById('userInput').value = userInputValue;
+      }
     }
   </script>
 </body>
