@@ -77,7 +77,7 @@
       box-sizing: border-box;
       resize: vertical;
       /* Allows the user to resize it vertically */
-      height: 60px;
+      height: 100px;
       /* This sets the initial vertical size */
     }
 
@@ -111,15 +111,18 @@
   </div>
 
   <div class="container">
-    <label for="result">Your signature comes out here:</label>
+    <label for="result">Your signature result comes out here:</label>
     <textarea id="result" placeholder="Signature" readonly></textarea>
+    <button onclick="copyTextToClipboard()">Copy</button>
   </div>
 
   <script>
+    const whitelistedPrefixLocal = "1RELAYTEST"
+
     async function signMessage() {
       const userMessage = document.getElementById('userInput').value;
       const sig = await relayone.sign(userMessage);
-      document.getElementById('result').value = sig.value;
+      document.getElementById('result').value = userMessage + "\n" + user.paymail + "\n" + sig.value;
     }
 
     // Listen for the Enter key press on the user input
@@ -130,6 +133,14 @@
         signMessage();
       }
     });
+
+    function copyTextToClipboard() {
+      const textarea = document.getElementById('result');
+      textarea.select(); // Select the content
+      document.execCommand('copy'); // Copy to clipboard
+      alert('Text copied to clipboard!'); // Optional: Feedback to the user
+    }
+
 
     // // After rendering the button, listen for the payment event
     // relayone.on('payment', function (payment) {
