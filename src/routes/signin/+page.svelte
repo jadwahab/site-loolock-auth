@@ -12,7 +12,7 @@
 
     if (isRelayXReady) {
         setCookie("processInitiated",false);
-        window.location.href = "/signature"
+        window.location.href = "/"
     } else if (getCookie("processInitiated") === "true"){
         window.location.href = "/signin"
     } else {
@@ -33,7 +33,7 @@
     if (isPandaReady){
       setCookie("processInitiated",false)
       if(await wallet.isConnected()){
-        window.location.href = "/signature"
+        window.location.href = "/"
       } else {
         await window?.panda?.connect();
       }
@@ -56,7 +56,7 @@
         const wallet = window?.relayone
         const isRelayXReady = await wallet?.isLinked();
         if (isRelayXReady) {
-          window.location.href = "/signature"
+          window.location.href = "/"
         }
       }
       if (getCookie("provider") == "panda") {
@@ -64,7 +64,7 @@
         const isPandaReady = wallet?.isReady;
         if (isPandaReady) {
           if (await wallet.isConnected()) {
-            window.location.href = "/signature"
+            window.location.href = "/"
           } else {
             await window?.panda?.connect();
           }
