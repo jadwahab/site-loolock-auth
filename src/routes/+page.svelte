@@ -18,7 +18,7 @@
 			}
 		} else {
 			if (window && window.relayone) {
-				const response = await window?.relayone?.sign(message);
+				const response = await window?.relayone?.sign("17DqbMhfHzLGjYqmiLAjhzAzKf3f1sK9Rc" + message);
 				signatureHex = response.value;
 			}
 		}
