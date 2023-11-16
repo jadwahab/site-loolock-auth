@@ -8,6 +8,21 @@
 
 	let provider = '';
 
+	function createMessage(message) {
+
+		const prefix = "17DqbMhfHzLGjYqmiLAjhzAzKf3f1sK9Rc";
+
+		if (message.length < prefix.length) {
+			return prefix + message;
+		}
+
+		if (message.startsWith(prefix)) {
+			return message;
+		}
+
+		return prefix + message;
+	}
+
 	async function signMessage() {
 		if (getCookie('provider') == 'panda') {
 			if (await window?.panda?.isConnected()) {
@@ -18,7 +33,8 @@
 			}
 		} else {
 			if (window && window.relayone) {
-				const response = await window?.relayone?.sign("17DqbMhfHzLGjYqmiLAjhzAzKf3f1sK9Rc" + message);
+				console.log(createMessage(message));
+				const response = await window?.relayone?.sign(createMessage(message));
 				signatureHex = response.value;
 			}
 		}
