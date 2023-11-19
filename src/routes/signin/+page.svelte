@@ -77,8 +77,8 @@
 
 <div class="font-Inter flex flex-col items-center justify-center h-screen">
   <Modal>
-    <h1 class="text-[#252525] text-[32px] font-semibold mb-8 ">Welcome to Bitcoin Message Signer</h1>
-    <div class="p-8 relative container mx-auto rounded rounded-3xl">
+    <h1 class="text-[#252525] text-[20px] md:text-[32px] font-semibold mb-8 ">Welcome to Bitcoin Message Signer</h1>
+    <div class="md:p-8 relative container mx-auto rounded rounded-3xl">
         <!-- <img src="/cross.svg" class="absolute right-4 top-4" alt=""> -->
       <a href="/">
         <img src="/cross.svg" class="absolute right-4 top-4 cursor-pointer" alt="">
@@ -108,12 +108,16 @@
   <style>
     /* Add custom styling here if needed */
 .container {
-    @apply flex flex-col justify-center items-center h-[345px] w-[583px];
+    @apply flex flex-col justify-center items-center;
     background-color: white;
+    @media (max-width: 767px) {
+			max-width: 3/4;
+      padding: 0px 10px;
+		}
 }
 
   .button {
-    @apply bg-transparent border border-[#0000001A] text-[#2F2F2F] font-medium py-2 px-4 rounded w-full;
+    @apply bg-transparent border border-[#0000001A] text-[#2F2F2F] font-medium py-2 rounded w-full;
     margin: 10px;
   }
   </style>

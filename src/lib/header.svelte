@@ -19,14 +19,14 @@
 
 </script>
 
-<div class="p-6 px-8 font-Inter flex justify-between items-center bg-gray-100 p-4 dropdown">
+<div class="md:p-6 md:px-8 py-8 font-Inter flex justify-between items-center bg-gray-100 p-2 dropdown">
     <div>
-        <h1 class="text-[28px] font-bold text-[#252525] ">Hi {userName} 👋🏼</h1>
+        <h1 class="md:text-[28px] text-[18px] font-bold text-[#252525] ">Hi {userName} 👋🏼</h1>
         <p class="text-[14px] text-[#252525] font-normal">Welcome to Bitcoin Message Signer</p>
     </div>
     <div class="flex">
-        <button class="flex items-center ml-4 border-2 border-gray-300 rounded rounded-[40px] bg-transparent text-[#252525] font-bold py-2 px-4 rounded" on:click={togglePopup}>
-            <div class="bg-[#0056B3] rounded-full h-10 w-10 flex items-center justify-center text-white font-bold text-lg">
+        <button class="flex items-center md:ml-4 border-2 border-gray-300 rounded rounded-[40px] bg-transparent text-[#252525] font-bold px-2 md:py-2 md:px-4 rounded" on:click={togglePopup}>
+            <div class="bg-[#0056B3] rounded-full md:h-10 md:w-10 w-8 h-8 flex items-center justify-center text-white font-bold text-lg">
                     <img src={userIcon} alt="" />
             </div>
             <div class="flex flex-col ml-2 mr-4 text-start">

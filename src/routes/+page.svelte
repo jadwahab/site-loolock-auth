@@ -132,9 +132,9 @@
 </script>
 
 <Header userName={$userInfo?.name} userIcon={$userInfo?.avatar} {provider}/>
-<div class="font-Inter flex flex-col items-center h-screen pt-16">
+<div class="font-Inter flex flex-col items-center h-screen md:pt-16 pt-8">
 	<h1 class="text-[#252525] text-[32px] font-semibold mb-2">Create your Signature</h1>
-	<p class="text-[#6D6D6D] text-[14px] mb-8">
+	<p class="text-center px-10 md:p-0 text-[#6D6D6D] text-[14px] mb-8">
 		We are happy to have you. To use our services, you need to create your signature
 	</p>
 	<div class="p-8 relative container rounded rounded-3xl mb-8">
@@ -142,7 +142,7 @@
 		<!-- <input type="text" placeholder="Your input here" class="bg-transparent border-2 border-gray-300 rounded-md p-2 w-full"> -->
 		<textarea
 				bind:value={message}
-				class="bg-transparent border-2 border-gray-300 rounded-md p-2 w-full mb-12"
+				class="bg-transparent border-2 border-gray-300 rounded-md p-2 md:w-full mb-12"
 		/>
 		<button class="button mt-2" on:click={() => signMessage()}> CONFIRM</button>
 	</div>
@@ -169,10 +169,14 @@
 	.container {
 		@apply flex flex-col justify-center h-[278px] w-[583px];
 		background-color: white;
+
+		@media (max-width: 767px) {
+			max-width: 95%;
+		}
 	}
 
 	.button {
 		@apply text-[#FFFFFF] bg-[#0056B3] border border-[#0000001A] font-medium py-2 px-4 rounded w-full;
-		margin: 10px;
+		/* margin: 10px; */
 	}
 </style>
