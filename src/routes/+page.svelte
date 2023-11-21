@@ -1,7 +1,7 @@
 <script>
 	import Header from '$lib/header.svelte';
 	import {onMount} from 'svelte';
-	import {getCookie, userInfo} from '$lib/store';
+	import {getCookie, userInfo, getValueFromCookieMap, addToCookieMap} from '$lib/store';
 
 	$: message = '';
 	$: signatureHex = '';
@@ -27,7 +27,7 @@
 		if (getCookie('provider') == 'panda') {
 			if (await window?.panda?.isConnected()) {
 				const response = await window?.panda?.signMessage({message: message});
-				signatureHex = response?.sig ?? response.signature;
+				signatureHex = message + "\n" + $userInfo?.name+ "\n"+ response?.sig ?? response.signature;
 			} else {
 				await window?.panda?.connect();
 			}
@@ -35,9 +35,14 @@
 			if (window && window.relayone) {
 				console.log(createMessage(message));
 				const response = await window?.relayone?.sign(createMessage(message));
-				signatureHex = response.value;
+				signatureHex = message + "\n" + $userInfo?.name+ "\n"+ response.value;
 			}
 		}
+	}
+
+
+	function getURLParameter(name) {
+		return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
 	}
 
 	async function getPandaUserProfile() {
@@ -120,11 +125,20 @@
 
 	onMount(async () => {
 		provider = getCookie('provider');
+		message = getURLParameter('userInput');
+		if (message) {
+			await addToCookieMap("relayX", message);
+		}
 		if(provider === ''){
 			window.location.href = 'signin'
 		} else if (provider === 'panda') {
 			await getPandaUserProfile();
 		} else {
+			if (!message){
+				if(getValueFromCookieMap(provider)){
+					message = getValueFromCookieMap(provider);
+				}
+			}
 			await getRelayoneUserProfile();
 		}
 	});
