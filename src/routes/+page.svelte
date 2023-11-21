@@ -5,6 +5,7 @@
 
 	$: message = '';
 	$: signatureHex = '';
+	$: pubkey = '';
 
 	let provider = '';
 
@@ -27,7 +28,7 @@
 		if (getCookie('provider') == 'panda') {
 			if (await window?.panda?.isConnected()) {
 				const response = await window?.panda?.signMessage({message: message});
-				signatureHex = message + "\n" + $userInfo?.name+ "\n"+ response?.sig ?? response.signature;
+				signatureHex = message + "\n" + response?.sig ?? response.signature + "\n" + pubkey + "\n" + $userInfo?.name;
 			} else {
 				await window?.panda?.connect();
 			}
@@ -35,7 +36,7 @@
 			if (window && window.relayone) {
 				console.log(createMessage(message));
 				const response = await window?.relayone?.sign(createMessage(message));
-				signatureHex = message + "\n" + $userInfo?.name+ "\n"+ response.value;
+				signatureHex = message + "\n"+ response.value + "\n" + pubkey + "\n" + $userInfo?.name;
 			}
 		}
 	}
@@ -112,6 +113,7 @@
 		const token = await window.relayone.authBeta();
 		const [payload, signature] = token.split('.');
 		const user = JSON.parse(atob(payload));
+		pubkey = user.pubkey;
 		let profile = {
 			name: user.paymail,
 			avatar: 'https://a.relayx.com/u/' + user.paymail
