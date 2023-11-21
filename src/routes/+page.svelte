@@ -58,7 +58,7 @@
 				avatar: response.avatar
 			};
 			const keys = await window.panda.getPubKeys();
-			pubkey = keys.ordPubKey;
+			pubkey = keys.identityPubKey;
 
 			userInfo.update((data) => {
 				data = profile;
