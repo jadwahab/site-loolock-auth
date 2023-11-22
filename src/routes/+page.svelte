@@ -172,6 +172,7 @@
 			Your signature result comes out here:
 		</p>
 		<textarea
+				readonly
 				bind:value={signatureHex}
 				id="signatureResult"
 				class="bg-transparent border-2 border-gray-300 rounded-md p-2 w-full mb-12 text-[#252525]"
