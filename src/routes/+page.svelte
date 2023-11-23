@@ -132,7 +132,7 @@
 </script>
 
 <Header userName={$userInfo?.name} userIcon={$userInfo?.avatar} {provider}/>
-<div class="font-Inter flex flex-col items-center h-screen md:pt-16 pt-8">
+<div class="font-Inter flex flex-col items-center hscreen md:py-16 py-8">
 	<h1 class="text-[#252525] text-[32px] font-semibold mb-2">Create your Signature</h1>
 	<p class="text-center px-10 md:p-0 text-[#6D6D6D] text-[14px] mb-8">
 		We are happy to have you. To use our services, you need to create your signature
@@ -152,6 +152,7 @@
 			Your signature result comes out here:
 		</p>
 		<textarea
+				readonly
 				bind:value={signatureHex}
 				id="signatureResult"
 				class="bg-transparent border-2 border-gray-300 rounded-md p-2 w-full mb-12 text-[#252525]"
