@@ -156,7 +156,7 @@
 				bind:value={message}
 				class="bg-transparent border-2 border-gray-300 rounded-md p-2 md:w-full mb-12"
 		/>
-		<button class="button mt-2 {isSubmitted ? 'bg-black' : ''}" on:click={() => signMessage()} disabled={isLoading}>
+		<button class="text-[#FFFFFF] bg-[#0056B3] border border-[#0000001A] font-medium py-2 px-4 rounded w-full mt-2 {isSubmitted ? 'bg-[#0056b3b5]' : ''}" on:click={() => signMessage()} disabled={isLoading}>
 			{#if isLoading}
 				<span class="loading loading-dots loading-md"></span>
 			{:else}
@@ -184,7 +184,7 @@
 </div>
 
 <style>
-	.sub {
+	 .bg-black{
     	background-color: black;
   	}
 	/* Add custom styling here if needed */
