@@ -22,21 +22,33 @@
 
 		return prefix + message;
 	}
-
+	let isLoading = false;
+	let isSubmitted= false;
 	async function signMessage() {
-		if (getCookie('provider') == 'panda') {
-			if (await window?.panda?.isConnected()) {
-				const response = await window?.panda?.signMessage({message: message});
-				signatureHex = response?.sig ?? response.signature;
+		isLoading = true;
+		try{
+			if (getCookie('provider') == 'panda') {
+				if (await window?.panda?.isConnected()) {
+					const response = await window?.panda?.signMessage({message: message});
+					signatureHex = response?.sig ?? response.signature;
+				} else {
+					await window?.panda?.connect();
+				}
 			} else {
-				await window?.panda?.connect();
+				if (window && window.relayone) {
+					console.log(createMessage(message));
+					const response = await window?.relayone?.sign(createMessage(message));
+					signatureHex = response.value;
+				}
 			}
-		} else {
-			if (window && window.relayone) {
-				console.log(createMessage(message));
-				const response = await window?.relayone?.sign(createMessage(message));
-				signatureHex = response.value;
-			}
+			isSubmitted = true;
+			console.log("submitted", isSubmitted);
+		}catch(error){
+			console.error('Error signing message:', error);
+		}finally{
+			setTimeout(()=> {
+				isLoading = false;
+			}, 1000);
 		}
 	}
 
@@ -144,7 +156,13 @@
 				bind:value={message}
 				class="bg-transparent border-2 border-gray-300 rounded-md p-2 md:w-full mb-12"
 		/>
-		<button class="button mt-2" on:click={() => signMessage()}> CONFIRM</button>
+		<button class="button mt-2 {isSubmitted ? 'bg-black' : ''}" on:click={() => signMessage()} disabled={isLoading}>
+			{#if isLoading}
+				<span class="loading loading-dots loading-md"></span>
+			{:else}
+				CONFIRM
+			{/if}
+		</button>
 	</div>
 
 	<div class="p-8 relative container mx- rounded rounded-3xl">
@@ -166,6 +184,9 @@
 </div>
 
 <style>
+	.sub {
+    	background-color: black;
+  	}
 	/* Add custom styling here if needed */
 	.container {
 		@apply flex flex-col justify-center h-[278px] w-[583px];
