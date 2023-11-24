@@ -48,7 +48,7 @@
 		}finally{
 			setTimeout(()=> {
 				isLoading = false;
-			}, 1000);
+			}, 5000);
 		}
 	}
 
@@ -189,7 +189,7 @@
   	}
 	/* Add custom styling here if needed */
 	.container {
-		@apply flex flex-col justify-center h-[278px] w-[583px];
+		@apply flex flex-col justify-center w-[583px];
 		background-color: white;
 
 		@media (max-width: 767px) {

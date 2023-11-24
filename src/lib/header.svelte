@@ -24,7 +24,10 @@
         <!-- <span style="display:block; text-overflow: ellipsis;width: 200px;overflow: hidden; white-space: nowrap;">
             Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
         </span> -->
-        <h1 class="md:text-[28px] text-[18px] font-bold text-[#252525] w-[200px] md:w-[400px] "style="display:block; text-overflow: ellipsis;overflow: hidden; white-space: nowrap;">Hi {userName} 👋🏼</h1>
+        <h1 class="md:text-[28px] text-[18px] font-bold text-[#252525] w-[200px] md:w-[400px]"
+        style="display:block; text-overflow: ellipsis;overflow: hidden; white-space: nowrap;"
+        title="Hi {userName} 👋🏼"
+        >Hi {userName} 👋🏼</h1>
         <p class="text-[14px] text-[#252525] font-normal md:block hidden">Welcome to Bitcoin Message Signer</p>
     </div>
     <div class="flex">
