@@ -1,10 +1,12 @@
 <script>
 	import Header from '$lib/header.svelte';
 	import {onMount} from 'svelte';
-	import {getCookie, userInfo} from '$lib/store';
+	import {getCookie, userInfo, getValueFromCookieMap, addToCookieMap} from '$lib/store';
+	import {setCookie} from "../lib/store";
 
 	$: message = '';
 	$: signatureHex = '';
+	$: pubkey = '';
 
 	let provider = '';
 
@@ -25,21 +27,19 @@
 	let isLoading = false;
 	let isSubmitted= false;
 	async function signMessage() {
-		isLoading = true;
-		try{
-			if (getCookie('provider') == 'panda') {
-				if (await window?.panda?.isConnected()) {
-					const response = await window?.panda?.signMessage({message: message});
-					signatureHex = response?.sig ?? response.signature;
-				} else {
-					await window?.panda?.connect();
-				}
+		if (getCookie('provider') == 'panda') {
+			if (await window?.panda?.isConnected()) {
+				const response = await window?.panda?.signMessage({message: message});
+				const signature = response?.sig ?? response.signature;
+				signatureHex = message + "\n" + signature + "\n" + pubkey;
 			} else {
-				if (window && window.relayone) {
-					console.log(createMessage(message));
-					const response = await window?.relayone?.sign(createMessage(message));
-					signatureHex = response.value;
-				}
+				await window?.panda?.connect();
+			}
+		} else {
+			if (window && window.relayone) {
+				console.log(createMessage(message));
+				const response = await window?.relayone?.sign(createMessage(message));
+				signatureHex = message + "\n"+ response.value + "\n" + pubkey + "\n" + $userInfo?.name;
 			}
 			isSubmitted = true;
 			console.log("submitted", isSubmitted);
@@ -50,6 +50,12 @@
 				isLoading = false;
 			}, 5000);
 		}
+		await setCookie("message", '');
+	}
+
+
+	function getURLParameter(name) {
+		return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
 	}
 
 	async function getPandaUserProfile() {
@@ -60,6 +66,8 @@
 				name: response.displayName,
 				avatar: response.avatar
 			};
+			const keys = await window.panda.getPubKeys();
+			pubkey = keys.identityPubKey;
 
 			userInfo.update((data) => {
 				data = profile;
@@ -119,6 +127,7 @@
 		const token = await window.relayone.authBeta();
 		const [payload, signature] = token.split('.');
 		const user = JSON.parse(atob(payload));
+		pubkey = user.pubkey;
 		let profile = {
 			name: user.paymail,
 			avatar: 'https://a.relayx.com/u/' + user.paymail
@@ -132,6 +141,14 @@
 
 	onMount(async () => {
 		provider = getCookie('provider');
+		message = getURLParameter('userInput');
+		if (message) {
+			await setCookie("message", message);
+		} else {
+			if(getCookie("message")){
+				message = getCookie("message");
+			}
+		}
 		if(provider === ''){
 			window.location.href = 'signin'
 		} else if (provider === 'panda') {
