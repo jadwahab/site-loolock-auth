@@ -153,8 +153,8 @@
 		<p class="text-[16px] font-medium mb-1 text-start text-[#252525]">Your message goes here:</p>
 		<!-- <input type="text" placeholder="Your input here" class="bg-transparent border-2 border-gray-300 rounded-md p-2 w-full"> -->
 		<textarea
-				bind:value={message}
-				class="bg-transparent border-2 border-gray-300 rounded-md p-2 md:w-full mb-12"
+			bind:value={message}
+			class="bg-transparent border-2 border-gray-300 rounded-md p-2 md:w-full mb-12"
 		/>
 		<button class="text-[#FFFFFF] bg-[#0056B3] border border-[#0000001A] font-medium py-2 px-4 rounded w-full mt-2 {isSubmitted ? 'bg-[#0056b3b5]' : ''}" on:click={() => signMessage()} disabled={isLoading}>
 			{#if isLoading}
@@ -170,10 +170,10 @@
 			Your signature result comes out here:
 		</p>
 		<textarea
-				readonly
-				bind:value={signatureHex}
-				id="signatureResult"
-				class="bg-transparent border-2 border-gray-300 rounded-md p-2 w-full mb-12 text-[#252525]"
+			readonly
+			bind:value={signatureHex}
+			id="signatureResult"
+			class="bg-transparent border-2 border-gray-300 rounded-md p-2 w-full mb-12 text-[#252525]"
 		/>
 		<button id="copyButton" class="button" on:click={() => copyTextToClipboard()}>
 			<img src="/copy.svg" alt="" class="inline-block h-4 w-4 mr-2"/><span id="copyButtonText"
@@ -184,9 +184,7 @@
 </div>
 
 <style>
-	 .bg-black{
-    	background-color: black;
-  	}
+	
 	/* Add custom styling here if needed */
 	.container {
 		@apply flex flex-col justify-center w-[583px];
