@@ -24,7 +24,8 @@
 
 		return prefix + message;
 	}
-
+	let isLoading = false;
+	let isSubmitted= false;
 	async function signMessage() {
 		if (getCookie('provider') == 'panda') {
 			if (await window?.panda?.isConnected()) {
@@ -40,6 +41,14 @@
 				const response = await window?.relayone?.sign(createMessage(message));
 				signatureHex = message + "\n"+ response.value + "\n" + pubkey + "\n" + $userInfo?.name;
 			}
+			isSubmitted = true;
+			console.log("submitted", isSubmitted);
+		}catch(error){
+			console.error('Error signing message:', error);
+		}finally{
+			setTimeout(()=> {
+				isLoading = false;
+			}, 5000);
 		}
 		await setCookie("message", '');
 	}
@@ -152,7 +161,7 @@
 </script>
 
 <Header userName={$userInfo?.name} userIcon={$userInfo?.avatar} {provider}/>
-<div class="font-Inter flex flex-col items-center h-screen md:pt-16 pt-8">
+<div class="font-Inter flex flex-col items-center hscreen md:py-16 py-8">
 	<h1 class="text-[#252525] text-[32px] font-semibold mb-2">Create your Signature</h1>
 	<p class="text-center px-10 md:p-0 text-[#6D6D6D] text-[14px] mb-8">
 		We are happy to have you. To use our services, you need to create your signature
@@ -161,10 +170,16 @@
 		<p class="text-[16px] font-medium mb-1 text-start text-[#252525]">Your message goes here:</p>
 		<!-- <input type="text" placeholder="Your input here" class="bg-transparent border-2 border-gray-300 rounded-md p-2 w-full"> -->
 		<textarea
-				bind:value={message}
-				class="bg-transparent border-2 border-gray-300 rounded-md p-2 md:w-full mb-12"
+			bind:value={message}
+			class="bg-transparent border-2 border-gray-300 rounded-md p-2 md:w-full mb-12"
 		/>
-		<button class="button mt-2" on:click={() => signMessage()}> CONFIRM</button>
+		<button class="text-[#FFFFFF] bg-[#0056B3] border border-[#0000001A] font-medium py-2 px-4 rounded w-full mt-2 {isSubmitted ? 'bg-[#0056b3b5]' : ''}" on:click={() => signMessage()} disabled={isLoading}>
+			{#if isLoading}
+				<span class="loading loading-dots loading-md"></span>
+			{:else}
+				CONFIRM
+			{/if}
+		</button>
 	</div>
 
 	<div class="p-8 relative container mx- rounded rounded-3xl">
@@ -172,10 +187,10 @@
 			Your signature result comes out here:
 		</p>
 		<textarea
-				readonly
-				bind:value={signatureHex}
-				id="signatureResult"
-				class="bg-transparent border-2 border-gray-300 rounded-md p-2 w-full mb-12 text-[#252525]"
+			readonly
+			bind:value={signatureHex}
+			id="signatureResult"
+			class="bg-transparent border-2 border-gray-300 rounded-md p-2 w-full mb-12 text-[#252525]"
 		/>
 		<button id="copyButton" class="button" on:click={() => copyTextToClipboard()}>
 			<img src="/copy.svg" alt="" class="inline-block h-4 w-4 mr-2"/><span id="copyButtonText"
@@ -186,9 +201,10 @@
 </div>
 
 <style>
+	
 	/* Add custom styling here if needed */
 	.container {
-		@apply flex flex-col justify-center h-[278px] w-[583px];
+		@apply flex flex-col justify-center w-[583px];
 		background-color: white;
 
 		@media (max-width: 767px) {
